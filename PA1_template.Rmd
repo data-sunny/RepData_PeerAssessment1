@@ -7,6 +7,8 @@ output: html_document
 
 This is an R Markdown document for Project 1 of Course: Reproducible Research.
 
+### Code : Read the dataset
+
 ```{r Read file data, echo=TRUE}
         # Read data and pre-process
             fname = "activity.csv"
@@ -36,6 +38,8 @@ This is an R Markdown document for Project 1 of Course: Reproducible Research.
         
         # Make plot - Histogram of daily steps
             hist(daily_steps, main = "Histogram - Total number of steps taken each day (missing values ignored)")
+            text( 3500, 20, paste( "Mean = ", signif(mean_daily_steps, digits=7), 
+                  "\n Median =", median_daily_steps))
 ```
 
 
@@ -55,11 +59,15 @@ This is an R Markdown document for Project 1 of Course: Reproducible Research.
             cat( " Maximum number of steps in interval = ", interval_steps_avg[interval_of_max] )
         
             plot(interval_steps_avg, type="l", xlab = "time interval", ylab = "Average steps for interval",
-                 main = "Average daily activity pattern")
+                 main = "Time series plot : Average daily activity pattern")
+            abline(v=interval_of_max, col="blue", lty=3)
+            text( 35, 150, paste( "Interval with max steps = ", interval_of_max))
 ```
 
 
 ### Code : Question 3 of assignment
+            Strategy : NA values for each interval are replaced by the average for that interval
+            calculated earlier in Question 2
 
 ```{r Q3, echo=TRUE, fig.width=10}
 # ========== QUESTION : Impute missing values - What is effect on total steps/day ====================== #
@@ -90,16 +98,18 @@ This is an R Markdown document for Project 1 of Course: Reproducible Research.
         
         # Calculate - daily steps taken, mean and median of "daily steps"
             
-            daily_steps_noNA <- tapply(data3$steps, as.Date( data3$date, format = "%Y-%m-%d"), sum)
-            mean_daily_steps_noNA <- mean(daily_steps_noNA) 
-            cat( " Mean of daily steps (NAs replaced with interval avg ) = ", mean_daily_steps_noNA )
-            median_daily_steps_noNA <- median(daily_steps)
-            cat( " Median of daily steps (NAs replaced with interval avg) = ", median_daily_steps_noNA )
+            daily_steps_replaceNA <- tapply(data3$steps, as.Date( data3$date, format = "%Y-%m-%d"), sum)
+            mean_daily_steps_replaceNA <- mean(daily_steps_replaceNA) 
+            cat( " Mean of daily steps (NAs replaced with interval avg ) = ", mean_daily_steps_replaceNA )
+            median_daily_steps_replaceNA <- median(daily_steps)
+            cat( " Median of daily steps (NAs replaced with interval avg) = ", median_daily_steps_replaceNA )
             cat( " What is impact ? compared to ignoring NAs ? = ", " Results identical i.e. no impact" )
         
         # Make plot - Histogram of daily steps
-            hist(daily_steps_noNA, xlab=" daily_steps", 
+            hist(daily_steps_replaceNA, xlab=" daily_steps", 
                  main = "Histogram - Total number of steps taken each day (NAs replaced with interval avg)")
+            text( 3500, 20, paste( "Mean = ", signif(mean_daily_steps_replaceNA, digits=7), 
+                                   "\n Median =", median_daily_steps_replaceNA))
 ```
 
 
